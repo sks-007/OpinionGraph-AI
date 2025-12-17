@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolicyPulse - AI Legislative Feedback Analyzer</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- D3.js & D3-Cloud for Word Cloud -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jasondavies/d3-cloud@v1.2.7/build/d3.layout.cloud.js"></script>
+
+    <!-- Chart.js for Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- PDF.js for PDF text extraction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;
+    </script>
+
+    <!-- jsPDF & html2canvas for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body class="antialiased text-gray-800">
+
+    <div id="app" class="min-h-screen p-4 sm:p-6 lg:p-8">
+        
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">PolicyPulse</h1>
+            <p class="mt-2 text-md sm:text-lg text-gray-600">AI-Powered Dashboard for Analyzing Legislative Feedback</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Left Column: File Hub -->
+            <div class="lg:col-span-4 space-y-8">
+                <div class="card p-6 sticky top-8">
+                    <h2 class="text-xl font-semibold mb-4">File Processing Hub</h2>
+                    
+                    <div id="drop-zone" class="w-full p-6 text-center rounded-lg cursor-pointer">
+                        <input type="file" id="file-input" class="hidden" multiple accept=".pdf,.txt,.csv">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <p class="mt-2 text-sm text-gray-600">
+                            <span class="font-semibold text-blue-600">Click to upload</span> or drag and drop
+                        </p>
+                        <p class="text-xs text-gray-500">PDF, TXT, or CSV files</p>
+                    </div>
+
+                    <div id="file-list" class="mt-4 space-y-2 max-h-48 overflow-y-auto"></div>
+
+                    <button id="analyze-btn" class="mt-4 w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                       Analyze Files
+                    </button>
+                    
+                    <div id="error-message" class="mt-4 text-red-600 text-sm font-medium hidden"></div>
+
+                    <div id="progress-section" class="mt-6 hidden">
+                        <h3 class="font-semibold text-gray-700">AI Analysis in Progress...</h3>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                            <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <p id="progress-text" class="text-sm text-gray-600 text-center mt-2"></p>
+                    </div>
+                </div>
+
+                <!-- Single Comment Analyzer Card -->
+                <div class="card p-6 sticky top-[30rem]">
+                    <h2 class="text-xl font-semibold mb-4">Quick Analysis</h2>
+                    <p class="text-sm text-gray-500 mb-4">Analyze a single comment or piece of text.</p>
+                    <textarea id="single-comment-input" class="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Paste a comment here..."></textarea>
+                    <button id="analyze-comment-btn" class="mt-4 w-full bg-indigo-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Analyze Comment
+                    </button>
+                    <div id="single-comment-error" class="mt-4 text-red-600 text-sm font-medium hidden"></div>
+                </div>
+            </div>
+
+            <!-- Right Column: Analysis Dashboard -->
+            <div class="lg:col-span-8">
+                <div id="dashboard-placeholder" class="card p-8 h-full flex flex-col items-center justify-center text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <h2 class="text-2xl font-semibold text-gray-700">Analysis Dashboard</h2>
+                    <p class="text-gray-500 mt-2">Upload feedback documents to generate your report.</p>
+                </div>
+                
+                <div id="analysis-results" class="hidden space-y-8">
+                    <div class="flex flex-wrap gap-4 justify-between items-center">
+                        <h2 class="text-2xl font-bold text-gray-800">Analysis Report</h2>
+                        <div class="flex items-center gap-4">
+                            <button id="reset-btn" class="bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9a9 9 0 0114.13-5.13M20 15a9 9 0 01-14.13 5.13" /></svg>
+                                Reset
+                            </button>
+                            <button id="export-btn" class="bg-white text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition flex items-center gap-2">
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" /></svg>
+                                Export as PDF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Top row cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card p-6 flex flex-col justify-center items-center"><h4 class="text-lg font-medium text-gray-500">Total Comments</h4><p id="total-comments" class="text-4xl font-bold text-blue-600 mt-2">0</p></div>
+                        <div class="card p-6 flex flex-col justify-center items-center"><h4 class="text-lg font-medium text-gray-500">Overall Sentiment</h4><p id="overall-sentiment" class="text-4xl font-bold mt-2">--</p></div>
+                        <div class="card p-6 flex flex-col justify-center items-center"><h4 class="text-lg font-medium text-gray-500">Top Theme</h4><p id="top-keyword" class="text-3xl font-bold text-gray-800 mt-2 capitalize">--</p></div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="card p-6"><h3 class="text-xl font-semibold mb-4">Sentiment Distribution</h3><div class="h-80 flex items-center justify-center"><canvas id="sentiment-chart"></canvas></div></div>
+                        <div class="card p-6"><h3 class="text-xl font-semibold mb-1">Key Themes Word Cloud</h3><p class="text-sm text-gray-500 mb-4">Most frequent terms across all comments.</p><div id="word-cloud-container" class="w-full h-80 bg-gray-50 rounded-lg border flex items-center justify-center"></div></div>
+                    </div>
+                    
+                    <!-- Results Table -->
+                    <div class="card p-6">
+                         <div class="flex flex-wrap gap-4 justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Comment Breakdown</h3>
+                            <div class="relative">
+                                <input type="text" id="search-input" class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Search comments...">
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg>
+                            </div>
+                         </div>
+                         <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 sortable" data-sort="filename">Filename</th>
+                                        <th scope="col" class="px-6 py-3 w-1/3">Comment Snippet</th>
+                                        <th scope="col" class="px-6 py-3 sortable" data-sort="sentiment">Sentiment</th>
+                                        <th scope="col" class="px-6 py-3 sortable" data-sort="confidence">Confidence</th>
+                                        <th scope="col" class="px-6 py-3">AI-Generated Summary</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="results-table-body"></tbody>
+                            </table>
+                         </div>
+                         <div id="pagination-controls" class="flex flex-wrap gap-4 justify-between items-center mt-4">
+                            <p id="pagination-info" class="text-sm text-gray-600"></p>
+                            <div class="flex items-center gap-2">
+                                <button id="prev-page-btn" class="px-3 py-1 border rounded-lg bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">&lt; Prev</button>
+                                <button id="next-page-btn" class="px-3 py-1 border rounded-lg bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">Next &gt;</button>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal for Single Comment Analysis -->
+        <div id="single-result-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-lg transform transition-all">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold text-gray-800">Single Comment Analysis</h3>
+                        <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+                    </div>
+                    <div id="modal-content" class="space-y-4">
+                        <!-- Content will be injected here by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+</body>
+</html>
