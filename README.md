@@ -1,12 +1,3 @@
----
-title: OpinionGraph AI
-emoji: 👁
-colorFrom: pink
-colorTo: red
-sdk: docker
-pinned: false
----
-
 # OpinionGraph AI - eConsultation Intelligence Platform
 
 <div align="center">
@@ -18,7 +9,9 @@ pinned: false
 
 **An AI-powered platform for analyzing stakeholder comments in government eConsultations using Sentiment Analysis, Intelligent Summarization, and Interactive Word Cloud visualization.**
 
-[Live Demo](#-getting-started) · [Features](#-features) · [Tech Stack](#-tech-stack) · [Setup Guide](#-installation) · [Sample Datasets](#-sample-datasets)
+🚀 **[View Live Deployment on Hugging Face Spaces](https://huggingface.co/spaces/coderxsachin/OpinionGraph-AI)** 🚀
+
+[Features](#features) · [Tech Stack](#tech-stack) · [Setup Guide](#installation) · [Sample Datasets](#sample-datasets)
 
 </div>
 
