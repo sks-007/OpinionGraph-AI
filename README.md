@@ -1,4 +1,4 @@
-# 🗺️ OpinionGraph AI — eConsultation Intelligence Platform
+# OpinionGraph AI - eConsultation Intelligence Platform
 
 <div align="center">
 
@@ -365,8 +365,6 @@ BATCH_SIZE = 32
 - [ ] REST API authentication with API keys
 
 ---
-
-## Team
 
 Built for **Smart India Hackathon 2026** under Problem Statement ID **25035** issued by the **Ministry of Corporate Affairs (MoCA)**.
 
