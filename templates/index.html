@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpinionGraph AI - eConsultation Intelligence Platform</title>
+    
+    <!-- External Libraries -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jasondavies/d3-cloud@v1.2.7/build/d3.layout.cloud.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;</script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+    <!-- Global Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo" data-route="home" onclick="window.location.hash = 'home';" style="cursor: pointer;">
+                <i data-lucide="network"></i>
+                <span>OpinionGraph AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#platform" class="nav-link">Platform</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how" class="nav-link">How It Works</a>
+                <a href="#dashboard" class="nav-link">Dashboard</a>
+                <a href="#demo" class="nav-link">Demo</a>
+                <a href="#docs" class="nav-link">Docs</a>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <a href="#demo" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-container">
+        <!-- Views will be injected or toggled here -->
+        
+        <!-- 1. Landing Page -->
+        <section id="view-home" class="view-section active">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="badge">Enterprise-Grade Analytics</div>
+                    <h1 class="hero-title">Transform Stakeholder Feedback into <span class="text-gradient">Policy Intelligence</span></h1>
+                    <p class="hero-subtitle">OpinionGraph AI helps government officials transform thousands of stakeholder responses into structured, meaningful, and actionable policy insights through intelligent analysis and interactive visualizations.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-large" onclick="appRouter.navigate('platform')">Explore Platform</button>
+                        <button class="btn btn-secondary btn-large" onclick="appRouter.navigate('demo')">Try Demo</button>
+                        <button class="btn btn-outline btn-large" onclick="appRouter.navigate('dashboard')">View Dashboard</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Platform Introduction -->
+        <section id="view-platform" class="view-section">
+            <div class="section-header">
+                <h2>What is OpinionGraph AI?</h2>
+                <p>The definitive decision-support platform designed exclusively for public consultations.</p>
+            </div>
+            <div class="container grid-2">
+                <div class="info-card">
+                    <div class="card-icon"><i data-lucide="lightbulb"></i></div>
+                    <h3>Why was it created?</h3>
+                    <p>To solve the impossible scale of modern eConsultations, ensuring every stakeholder voice is heard without overwhelming analysts.</p>
+                </div>
+                <div class="info-card">
+                    <div class="card-icon"><i data-lucide="briefcase"></i></div>
+                    <h3>Who will use it?</h3>
+                    <p>Policymakers, government officials, legislative analysts, and regulatory bodies drafting new frameworks.</p>
+                </div>
+            </div>
+            <div class="content-block center mt-4">
+                <button class="btn btn-primary" onclick="appRouter.navigate('problem')">Understand the Challenge</button>
+            </div>
+        </section>
+
+        <!-- 3. Problem Statement -->
+        <section id="view-problem" class="view-section">
+            <div class="section-header">
+                <h2>The Challenge of Scale</h2>
+                <p>Traditional workflows are failing to keep up with modern civic participation.</p>
+            </div>
+            <div class="infographic-container">
+                <div class="problem-box">
+                    <i data-lucide="file-text"></i>
+                    <h4>Manual Review</h4>
+                    <p>Reading thousands of repetitive PDFs takes weeks.</p>
+                </div>
+                <div class="problem-box">
+                    <i data-lucide="eye-off"></i>
+                    <h4>Hidden Insights</h4>
+                    <p>Crucial minor suggestions get lost in the noise.</p>
+                </div>
+                <div class="problem-box">
+                    <i data-lucide="clock"></i>
+                    <h4>Delayed Reporting</h4>
+                    <p>Months pass before policies can be finalized.</p>
+                </div>
+            </div>
+            <div class="content-block center mt-4">
+                <button class="btn btn-primary" onclick="appRouter.navigate('solution')">See the Solution</button>
+            </div>
+        </section>
+
+        <!-- 4. Proposed Solution -->
+        <section id="view-solution" class="view-section">
+            <div class="section-header">
+                <h2>Intelligent Transformation</h2>
+                <p>From unstructured chaos to structured policy intelligence.</p>
+            </div>
+            <div class="solution-journey">
+                <div class="journey-step">
+                    <div class="step-icon"><i data-lucide="upload-cloud"></i></div>
+                    <h4>Raw Data</h4>
+                    <p>Messy PDFs & Spreadsheets</p>
+                </div>
+                <div class="journey-line"></div>
+                <div class="journey-step active-pulse">
+                    <div class="step-icon"><i data-lucide="brain"></i></div>
+                    <h4>AI Processing</h4>
+                    <p>OpinionGraph Engine</p>
+                </div>
+                <div class="journey-line"></div>
+                <div class="journey-step">
+                    <div class="step-icon"><i data-lucide="pie-chart"></i></div>
+                    <h4>Actionable Intelligence</h4>
+                    <p>Structured Dashboards & Reports</p>
+                </div>
+            </div>
+            <div class="content-block center mt-4">
+                <button class="btn btn-primary" onclick="appRouter.navigate('why')">Why Choose Us?</button>
+            </div>
+        </section>
+
+        <!-- 5. Why OpinionGraph -->
+        <section id="view-why" class="view-section bg-light">
+            <div class="section-header">
+                <h2>The OpinionGraph Advantage</h2>
+            </div>
+            <div class="container grid-3">
+                <div class="feature-card">
+                    <i data-lucide="shield-check"></i>
+                    <h4>Government Ready</h4>
+                    <p>Built with privacy, security, and strict data-handling compliances required for public sector deployment.</p>
+                </div>
+                <div class="feature-card">
+                    <i data-lucide="zap"></i>
+                    <h4>Faster Decisions</h4>
+                    <p>Cut analysis time from months to minutes, accelerating the policy-making lifecycle.</p>
+                </div>
+                <div class="feature-card">
+                    <i data-lucide="users-2"></i>
+                    <h4>Every Voice Heard</h4>
+                    <p>No comment is overlooked. AI ensures total coverage of every submitted response.</p>
+                </div>
+            </div>
+            <div class="content-block center mt-4">
+                <button class="btn btn-primary" onclick="appRouter.navigate('features')">Explore Features</button>
+            </div>
+        </section>
+
+        <!-- 6. Complete Features -->
+        <section id="view-features" class="view-section">
+            <div class="section-header">
+                <h2>Comprehensive Capabilities</h2>
+                <p>Everything you need for end-to-end consultation analysis.</p>
+            </div>
+            <div class="features-grid container">
+                <!-- Injected via JS for brevity -->
+            </div>
+        </section>
+
+        <!-- 7. How It Works -->
+        <section id="view-how" class="view-section">
+            <div class="section-header">
+                <h2>The Analytical Workflow</h2>
+            </div>
+            <div class="workflow-timeline container">
+                <!-- Injected via JS -->
+            </div>
+            <div class="content-block center mt-4">
+                <button class="btn btn-primary btn-large" onclick="appRouter.navigate('demo')">Experience the Demo</button>
+            </div>
+        </section>
+
+        <!-- 8. Interactive Demo & 9. Sample Dataset -->
+        <section id="view-demo" class="view-section bg-gradient-dark">
+            <div class="section-header text-white">
+                <h2>Interactive Sandbox</h2>
+                <p>Experience the power of OpinionGraph AI right in your browser.</p>
+            </div>
+            <div class="container grid-2 demo-container">
+                <div class="demo-card">
+                    <h3>1. Get Sample Data</h3>
+                    <p class="text-muted">Don't have a dataset? Download our realistic eConsultation samples.</p>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <a href="/static/Sample1.csv" download="Sample1.csv" class="btn btn-secondary mt-2">
+                            <i data-lucide="download"></i> Download Sample 1 (CSV)
+                        </a>
+                        <a href="/static/Sample2.xlsx" download="Sample2.xlsx" class="btn btn-secondary mt-2">
+                            <i data-lucide="download"></i> Download Sample 2 (Excel)
+                        </a>
+                        <a href="/static/Sample3.xlsx" download="Sample3.xlsx" class="btn btn-secondary mt-2">
+                            <i data-lucide="download"></i> Download Sample 3 (Excel)
+                        </a>
+                    </div>
+                    <div class="dataset-preview mt-3">
+                        <small>Use these sample files to test the analysis engine.</small>
+                    </div>
+                </div>
+                <div class="demo-card drop-zone-card">
+                    <h3>2. Upload & Analyze</h3>
+                    <input type="file" id="demo-file-input" class="hidden" multiple accept=".pdf,.txt,.csv,.xlsx,.xls">
+                    <div class="drop-area" id="demo-drop-zone">
+                        <i data-lucide="upload-cloud" class="icon-large text-primary"></i>
+                        <p>Drag & Drop or <strong>Click to Upload</strong></p>
+                        <small class="text-muted">Supports PDF, CSV, Excel, TXT</small>
+                    </div>
+                    <div id="demo-file-list" class="mt-2"></div>
+                    <button class="btn btn-primary w-full mt-3" id="demo-analyze-btn" disabled>Launch AI Analysis</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. Live Analysis Experience -->
+        <section id="view-live" class="view-section">
+            <div class="processing-container">
+                <div class="spinner-large"></div>
+                <h2 class="mt-4" id="processing-title">Initializing Engine...</h2>
+                <div class="progress-bar-container">
+                    <div class="progress-fill" id="processing-progress"></div>
+                </div>
+                <ul class="processing-steps" id="processing-steps-list">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- 11. Complete Dashboard -->
+        <section id="view-dashboard" class="view-section bg-dashboard">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div>
+                    <h2>Consultation Dashboard</h2>
+                    <p class="text-muted">Real-time analysis of stakeholder submissions.</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button id="export-csv-btn" class="btn btn-secondary">
+                        <i data-lucide="download"></i> Export CSV
+                    </button>
+                    <button id="print-report-btn" class="btn btn-primary">
+                        <i data-lucide="printer"></i> Print Report
+                    </button>
+                </div>
+            </div>
+            
+            <div id="dashboard-empty-state" class="empty-state">
+                <i data-lucide="pie-chart" class="icon-xl text-muted"></i>
+                <h3>No Active Consultation</h3>
+                <p>Please upload data in the Demo section to populate the dashboard.</p>
+                <button class="btn btn-primary mt-3" onclick="appRouter.navigate('demo')">Go to Demo</button>
+            </div>
+
+            <div id="dashboard-content" class="dashboard-content hidden">
+                <div class="dash-grid-4">
+                    <div class="dash-card stat">
+                        <h5>Total Responses</h5>
+                        <h2 id="dash-total">0</h2>
+                    </div>
+                    <div class="dash-card stat">
+                        <h5>Overall Sentiment</h5>
+                        <h2 id="dash-sentiment">--</h2>
+                    </div>
+                    <div class="dash-card stat">
+                        <h5>Primary Topic</h5>
+                        <h2 id="dash-topic">--</h2>
+                    </div>
+                    <div class="dash-card stat">
+                        <h5>Avg. Confidence</h5>
+                        <h2 id="dash-conf">0%</h2>
+                    </div>
+                </div>
+
+                <div class="dash-grid-2 mt-4">
+                    <div class="dash-card">
+                        <h3>Opinion Breakdown</h3>
+                        <div class="chart-container"><canvas id="chart-sentiment"></canvas></div>
+                    </div>
+                    <div class="dash-card">
+                        <h3>Key Issues Heatmap (Word Cloud)</h3>
+                        <div class="wordcloud-container" id="dash-wordcloud"></div>
+                        <button class="btn btn-outline btn-small w-full mt-2" onclick="appRouter.navigate('wordcloud')">Interactive Explorer</button>
+                    </div>
+                </div>
+
+                <div class="dash-grid-2 mt-4">
+                    <div class="dash-card">
+                        <h3>Model Confidence Distribution</h3>
+                        <div class="chart-container"><canvas id="chart-advanced"></canvas></div>
+                    </div>
+                    <div class="dash-card">
+                        <h3>Stakeholder Category Breakdown</h3>
+                        <div class="chart-container"><canvas id="chart-category"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Navigation to deeper modules -->
+                <div class="dash-modules mt-4">
+                    <div class="module-card" onclick="appRouter.navigate('summary')">
+                        <i data-lucide="file-text"></i>
+                        <h4>AI Summary Centre</h4>
+                        <p>Executive reports & key findings.</p>
+                    </div>
+                    <div class="module-card" onclick="appRouter.navigate('explorer')">
+                        <i data-lucide="search"></i>
+                        <h4>Comment Explorer</h4>
+                        <p>Search, filter, and drill down.</p>
+                    </div>
+                    <div class="module-card" onclick="appRouter.navigate('topic')">
+                        <i data-lucide="network"></i>
+                        <h4>Topic Intelligence</h4>
+                        <p>Deep dive into detected themes.</p>
+                    </div>
+                    <div class="module-card" onclick="appRouter.navigate('analytics')">
+                        <i data-lucide="bar-chart"></i>
+                        <h4>Advanced Analytics</h4>
+                        <p>Trend analysis & cross-filtering.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12. AI Summary Centre -->
+        <section id="view-summary" class="view-section bg-dashboard">
+            <div class="dashboard-header">
+                <h2>AI Summary Centre</h2>
+                <button class="btn btn-secondary btn-small" onclick="appRouter.navigate('dashboard')">Back</button>
+            </div>
+            <div class="container mt-4">
+                <div class="dash-card">
+                    <h3>Executive Summary</h3>
+                    <p id="exec-summary-text" class="text-lg leading-relaxed text-muted">Awaiting analysis data to generate summary.</p>
+                </div>
+                <div class="grid-2 mt-4">
+                    <div class="dash-card border-success">
+                        <h3 class="text-success"><i data-lucide="thumbs-up"></i> Positive Observations</h3>
+                        <ul id="positive-obs" class="styled-list"></ul>
+                    </div>
+                    <div class="dash-card border-danger">
+                        <h3 class="text-danger"><i data-lucide="alert-triangle"></i> Key Concerns</h3>
+                        <ul id="negative-obs" class="styled-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13. Comment Explorer -->
+        <section id="view-explorer" class="view-section bg-dashboard">
+            <div class="dashboard-header">
+                <h2>Comment Explorer</h2>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <select id="explorer-filter" style="padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; margin: 0; box-sizing: border-box;">
+                        <option value="">All Opinions</option>
+                        <option value="Positive">Positive</option>
+                        <option value="Negative">Negative</option>
+                        <option value="Neutral">Neutral</option>
+                    </select>
+                    <div class="search-bar">
+                        <i data-lucide="search"></i>
+                        <input type="text" id="explorer-search" placeholder="Search comments, keywords...">
+                    </div>
+                </div>
+            </div>
+            <div class="dash-card mt-4 table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>Comment Snippet</th>
+                            <th>Opinion</th>
+                            <th>Summary</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="explorer-tbody">
+                        <tr><td colspan="5" class="text-center text-muted py-4">No data available.</td></tr>
+                    </tbody>
+                </table>
+                <div class="pagination mt-3" id="explorer-pagination"></div>
+            </div>
+        </section>
+
+        <!-- 14. Topic Intelligence -->
+        <section id="view-topic" class="view-section bg-dashboard">
+            <div class="dashboard-header">
+                <h2>Topic Intelligence</h2>
+                <button class="btn btn-secondary btn-small" onclick="appRouter.navigate('dashboard')">Back</button>
+            </div>
+            <div class="container mt-4 grid-3" id="topic-grid">
+                <div class="empty-state w-full col-span-3">No topic data extracted yet.</div>
+            </div>
+        </section>
+
+        <!-- 15. Word Cloud (Interactive) -->
+        <section id="view-wordcloud" class="view-section bg-dashboard">
+            <div class="dashboard-header">
+                <h2>Interactive Keyword Explorer</h2>
+                <button class="btn btn-secondary btn-small" onclick="appRouter.navigate('dashboard')">Back</button>
+            </div>
+            <div class="dash-card mt-4" style="height: 60vh;">
+                <div id="interactive-wordcloud" class="w-full h-full"></div>
+            </div>
+        </section>
+
+        <!-- 16. Advanced Analytics -->
+        <section id="view-analytics" class="view-section bg-dashboard">
+            <div class="dashboard-header">
+                <h2>Advanced Analytics</h2>
+                <button class="btn btn-secondary btn-small" onclick="appRouter.navigate('dashboard')">Back</button>
+            </div>
+            <div class="dash-grid-2 mt-4">
+                <div class="dash-card">
+                    <h3>Sentiment Proportion (Pie)</h3>
+                    <div class="chart-container"><canvas id="chart-analytics-sentiment"></canvas></div>
+                </div>
+                <div class="dash-card">
+                    <h3>Comment Length Distribution</h3>
+                    <div class="chart-container"><canvas id="chart-analytics-length"></canvas></div>
+                </div>
+            </div>
+            <div class="dash-grid-2 mt-4">
+                <div class="dash-card">
+                    <h3>Top 10 Keywords (Frequency)</h3>
+                    <div class="chart-container"><canvas id="chart-analytics-keywords"></canvas></div>
+                </div>
+                <div class="dash-card">
+                    <h3>Confidence Score Distribution</h3>
+                    <div class="chart-container"><canvas id="chart-analytics-confidence"></canvas></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 17. Report Centre -->
+        <section id="view-report" class="view-section bg-dashboard">
+            <div class="dashboard-header">
+                <h2>Report Centre</h2>
+            </div>
+            <div class="container mt-4">
+                <div class="dash-card text-center py-5">
+                    <i data-lucide="file-check-2" class="icon-xl text-primary mb-3"></i>
+                    <h3>Generate Executive Report</h3>
+                    <p class="text-muted mb-4">Compile all findings, charts, and summaries into a professional PDF document.</p>
+                    <button class="btn btn-primary btn-large" id="btn-generate-report" onclick="exportFullReport()">
+                        <i data-lucide="download"></i> Download Complete PDF
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 18. Analysis History -->
+        <section id="view-history" class="view-section bg-dashboard">
+            <div class="dashboard-header">
+                <h2>Analysis History</h2>
+            </div>
+            <div class="dash-card mt-4 table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Dataset</th>
+                            <th>Responses</th>
+                            <th>Sentiment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <tr><td colspan="5" class="text-center text-muted py-4">No history found.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 19. Documentation & 20. About -->
+        <section id="view-docs" class="view-section">
+            <div class="container mb-4">
+                <h2>Project Documentation</h2>
+                <p class="text-muted">Information about the OpinionGraph AI platform and sample datasets.</p>
+            </div>
+            <div class="container grid-3">
+                <div class="info-card" style="grid-column: 1 / -1; margin-bottom: 1rem; border-left: 4px solid var(--primary);">
+                    <h3>Project Background & Problem Statement</h3>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                        <span class="badge" style="background: var(--primary-light); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;">Smart India Hackathon 2026</span>
+                        <span class="badge" style="background: #f1f5f9; color: var(--text-muted); padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;">Ministry of Corporate Affairs (MoCA)</span>
+                        <span class="badge" style="background: #f1f5f9; color: var(--text-muted); padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;">Problem ID: 25035</span>
+                    </div>
+                    
+                    <h4 class="mt-3">Background</h4>
+                    <p class="mt-1">eConsultation module is an online platform wherein proposed amendments/draft legislations are posted on MCA's website for external users to submit their comments and suggestions pertaining to the same through the MCA21 portal. The comments are captured in a structured format for due consideration with respect to amending the draft legislation, based on the suggestions or observations received.</p>
+                    
+                    <h4 class="mt-3">Problem Statement</h4>
+                    <p class="mt-1">The draft document soliciting comments is made available for a specified period, during which any stakeholder may submit their observations either on the overall amendment or on specific provisions of the draft legislation. In instances where a substantial volume of comments is received on draft legislation, there exists a risk of certain observations being inadvertently overlooked or inadequately analysed.</p>
+                    <p class="mt-2">In order to review each individual submission, leveraging AI-assisted tools will help ensure that all remarks are duly considered and systematically analysed. Requirement is the development of an AI model aimed at predicting the sentiments of the suggestions provided by stakeholders in the eConsultation module. It should also generate a visual representation in the form of a word cloud, highlighting the keywords utilised by the stakeholders within their suggestions.</p>
+
+                    <h4 class="mt-3">Expected Outcome</h4>
+                    <p class="mt-1">The intention is to discern the feedback received from the stakeholders through the following:</p>
+                    <ul class="styled-list mt-2">
+                        <li><strong>Sentiment analysis</strong></li>
+                        <li><strong>Summary generation</strong></li>
+                        <li><strong>Word cloud</strong></li>
+                    </ul>
+                    <p class="mt-2">The solution should considerably reduce the effort of the end user in analysing a high volume of comments. It should be able to clearly identify the sentiments of comments individually as well as broadly overall. The summary generation should be accurate and convey the meaning of the comment properly, in a precise manner. The word cloud feature should showcase the density of the words used by all users.</p>
+                </div>
+                
+                <div class="info-card" style="grid-column: 1 / -1;">
+                    <h3>Our Mission</h3>
+                    <p>OpinionGraph AI was built to empower democratic processes. By leveraging cutting-edge NLP, we ensure that public consultations are analyzed fairly, efficiently, and comprehensively, leading to evidence-based policymaking.</p>
+                </div>
+                <div class="info-card">
+                    <h3>User Guide</h3>
+                    <ul class="styled-list">
+                        <li><strong>Input:</strong> CSV/Excel with a feedback column, or raw PDFs.</li>
+                        <li><strong>Processing:</strong> Uses local AI models for complete privacy.</li>
+                        <li><strong>Output:</strong> Interactive dashboards and PDF exports.</li>
+                    </ul>
+                </div>
+                <div class="info-card" style="grid-column: 1 / -1; margin-top: 1rem;">
+                    <h3>Sample Dataset Description (Sample1.csv)</h3>
+                    <p>The uploaded file, <strong>Sample1.csv</strong>, is a small, structured demonstration dataset designed to showcase the core capabilities of the OpinionGraph AI platform. It consists of <strong>100 text-based records</strong>, where each record represents an individual comment. The dataset contains a single column named <strong>"Comment"</strong>, which stores natural language statements that express different types of opinions, reactions, feedback, and observations. Since there are no missing values or formatting inconsistencies, the dataset is clean and immediately suitable for text analysis.</p>
+
+                    <p class="mt-2">Although the dataset contains 100 records, it includes only <strong>15 unique comments</strong>, meaning that approximately <strong>85% of the records are duplicates</strong>. This characteristic is intentional for demonstration purposes, as it allows the platform to effectively showcase features such as duplicate comment detection, frequency analysis, word cloud generation, comment clustering, and recurring theme identification. By processing repeated responses, the platform can demonstrate how frequently certain opinions occur and identify the most commonly discussed ideas within a consultation.</p>
+                    
+                    <p class="mt-2">The comments themselves represent a balanced mixture of positive, negative, and neutral opinions. Positive comments include expressions of appreciation such as <em>"I really enjoyed this post, very insightful!"</em>, <em>"Amazing effort, very helpful content."</em>, and <em>"Great work, keep it up!"</em>. Negative comments express dissatisfaction or criticism, including statements like <em>"This wasn't clear at all."</em>, <em>"The explanation could be better."</em>, and <em>"I didn't find this very useful."</em>. Neutral comments provide observations without strong emotional sentiment, such as <em>"Okay, that's interesting."</em>, <em>"Noted, thanks for sharing."</em>, and <em>"Alright, got it."</em>. This diversity enables the AI system to demonstrate sentiment classification across multiple opinion categories.</p>
+
+                    <p class="mt-2">One of the primary strengths of this dataset is its simplicity. Since it contains only a single text field, it serves as an ideal input for demonstrating Natural Language Processing (NLP) tasks without requiring complex preprocessing. The platform can easily perform sentiment analysis, automatically summarize comments, extract important keywords, generate interactive word clouds, identify duplicate responses, calculate comment frequencies, and provide an overall summary of stakeholder opinions. These capabilities allow users to experience the complete AI analysis workflow on a compact demonstration dataset.</p>
+
+                    <p class="mt-2">The dataset also supports the generation of several useful dashboard components. The platform can display overall statistics such as the total number of comments, the number of unique comments, duplicate comment count, average comment length, and processing time. Visualizations including sentiment distribution charts, keyword frequency graphs, word clouds, duplicate analysis, comment length distributions, and most frequent comment rankings can all be generated directly from the uploaded data. Additionally, users can search individual comments, filter repeated responses, and explore AI-generated summaries for each record.</p>
+
+                    <p class="mt-2">Despite its usefulness as a demonstration dataset, the sample has several limitations. It lacks contextual information such as stakeholder identity, organization, consultation title, submission date, geographic location, stakeholder type, and consultation category. As a result, advanced analyses such as organization-wise sentiment comparison, stakeholder segmentation, regional analysis, timeline visualization, consultation comparison, participation statistics, and demographic insights cannot be performed. The platform is therefore limited to text-centric analysis rather than comprehensive consultation intelligence.</p>
+
+                    <p class="mt-2">For production use within OpinionGraph AI, the dataset structure should be significantly richer. In addition to the comment text, each response should ideally include a unique response identifier, stakeholder name, stakeholder type, organization, consultation title, question identifier, submission date, language, region or state, consultation category, and other relevant metadata. During processing, the platform should generate additional AI-derived fields such as predicted sentiment, stakeholder intent, detected topics, extracted keywords, identified entities, confidence scores, and AI-generated summaries. This enriched dataset would enable advanced dashboards, stakeholder-level analytics, historical trend analysis, executive reporting, interactive filtering, and comprehensive policy intelligence.</p>
+                    
+                    <p class="mt-2">Overall, <strong>Sample1.csv</strong> serves as an effective proof-of-concept dataset for demonstrating the fundamental text analysis capabilities of OpinionGraph AI. It is well suited for showcasing the platform's NLP pipeline, AI-driven sentiment analysis, summarization, keyword extraction, duplicate detection, and visualization features. However, it should be regarded as a demonstration dataset rather than a complete real-world eConsultation dataset, and expanding its schema with stakeholder and consultation metadata would greatly enhance the platform's analytical depth and authenticity.</p>
+                </div>
+                <div class="info-card" style="grid-column: 1 / -1; margin-top: 1rem;">
+                    <h3>Sample Dataset Description (Sample2.xlsx)</h3>
+                    <p>The <strong>Sample 2.xlsx</strong> dataset is a curated collection of stakeholder-style textual responses designed specifically for demonstrating and evaluating the capabilities of an AI-powered consultation analysis platform such as <strong>OpinionGraph AI</strong>. Unlike benchmark sentiment datasets that primarily focus on labeled opinions, this dataset simulates realistic consultation responses similar to those submitted by individuals, professionals, industry representatives, or organizations during public policy consultations. It therefore serves as an excellent demonstration dataset for showcasing intelligent document analysis, stakeholder feedback interpretation, and policy insight generation.</p>
+                    
+                    <p class="mt-2">The dataset contains <strong>778 individual textual responses</strong>, with each row representing a single stakeholder comment. The file consists of <strong>one primary text column</strong>, where every entry is an independent opinion or recommendation. Although the worksheet does not contain an explicit column header, each record is a complete natural-language statement that can be directly processed by the AI engine without requiring multiple structured fields. The responses are clean, consistently formatted, and free from obvious missing values, making the dataset immediately suitable for analysis.</p>
+
+                    <p class="mt-2">The comments primarily revolve around <strong>government regulations, corporate governance, compliance frameworks, taxation, digital governance, public administration, regulatory reforms, ease of doing business, MSME policies, company law, investor protection, transparency, and administrative procedures</strong>. Most responses are constructive in nature, where stakeholders acknowledge existing initiatives while simultaneously recommending improvements, expressing concerns, requesting clarification, or proposing amendments. This style closely resembles the language found in official public consultations, making the dataset highly appropriate for demonstrating government-focused AI applications.</p>
+
+                    <p class="mt-2">Unlike social media datasets, the language used throughout the dataset is professional and policy-oriented. Many comments contain balanced opinions that include both appreciation and constructive criticism within the same response. For example, a stakeholder may support a proposed regulation while simultaneously requesting clearer implementation guidelines or simplified compliance procedures. This creates realistic scenarios where simple positive or negative classification is insufficient, encouraging the AI system to perform deeper semantic understanding rather than relying solely on keyword-based sentiment detection.</p>
+
+                    <p class="mt-2">From a statistical perspective, the dataset contains <strong>778 comments</strong> with an average length of approximately <strong>9 words per response</strong>, although individual comments vary between <strong>6 and 26 words</strong>. The average character length is approximately <strong>75 characters</strong>, providing sufficient textual information for advanced Natural Language Processing tasks while maintaining efficient processing performance. The variation in response length also enables the platform to demonstrate features such as automatic summarization, comment categorization, semantic similarity analysis, and keyword extraction across both concise and relatively detailed stakeholder submissions.</p>
+
+                    <p class="mt-2">The dataset is particularly well suited for demonstrating the core analytical capabilities of OpinionGraph AI. Each response can undergo sentiment analysis to determine whether the stakeholder supports, opposes, or provides neutral observations regarding a proposal. The AI can further identify stakeholder intent, distinguishing between recommendations, concerns, requests for clarification, appreciation, criticism, or suggestions for policy improvement. By processing all responses collectively, the platform can automatically discover recurring themes, identify frequently discussed issues, extract significant keywords, and generate concise summaries that accurately represent the overall consultation.</p>
+
+                    <p class="mt-2">In addition to individual comment analysis, the dataset supports consultation-level intelligence generation. The platform can calculate overall sentiment distribution, identify the most frequently mentioned policy concerns, cluster semantically similar responses, detect duplicate or highly related opinions, and generate executive summaries highlighting the major areas of agreement and disagreement among stakeholders. Interactive visualizations such as word clouds, topic frequency charts, sentiment distribution graphs, keyword rankings, and comment exploration dashboards can all be populated using this dataset.</p>
+
+                    <p class="mt-2">One of the strengths of Sample 2 is its authenticity. The comments are written in a formal consultation style rather than casual conversational language, making them significantly more representative of real stakeholder submissions than traditional product reviews or social media posts. This allows the platform to demonstrate how AI can assist policymakers by converting large volumes of textual feedback into structured, evidence-based insights suitable for decision-making.</p>
+
+                    <p class="mt-2">Despite its usefulness, the dataset also has several limitations. Since it consists of only a single text column, it does not contain additional contextual information such as stakeholder identity, stakeholder category, organization name, consultation title, submission date, geographic location, consultation question, or respondent demographics. Consequently, advanced analyses such as stakeholder segmentation, organization-wise comparison, regional participation analysis, consultation timelines, demographic breakdowns, and organization-specific reporting cannot be performed directly using the current dataset. These capabilities would require additional metadata fields.</p>
+
+                    <p class="mt-2">For a production deployment of OpinionGraph AI, this dataset could be further enhanced by including structured attributes such as Response ID, Stakeholder Name, Stakeholder Type, Organization, Consultation Title, Question Identifier, Submission Date, State or Region, Language, Consultation Category, and other contextual information. AI-generated fields including sentiment, intent, detected topics, extracted keywords, confidence scores, semantic clusters, and generated summaries could then be stored alongside the original responses to create a comprehensive consultation intelligence database.</p>
+
+                    <p class="mt-2">Overall, <strong>Sample 2.xlsx</strong> represents an excellent demonstration dataset for an AI-powered eConsultation platform. Its realistic stakeholder responses, policy-focused language, and consistent formatting make it highly effective for validating the complete AI workflow, from text preprocessing and sentiment analysis to summarization, topic modeling, insight generation, and interactive dashboard visualization. While it does not contain the full metadata required for enterprise-scale consultation analytics, it provides a strong foundation for showcasing how OpinionGraph AI transforms unstructured stakeholder feedback into actionable policy intelligence.</p>
+                </div>
+                <div class="info-card" style="grid-column: 1 / -1; margin-top: 1rem;">
+                    <h3>Sample Dataset Description (Sample3.xlsx)</h3>
+                    <p>The <strong>Sample3.xlsx</strong> dataset is a compact benchmark dataset designed for <strong>sentiment analysis, opinion mining, and annotation consistency evaluation</strong>. It contains <strong>160 opinion-based textual records</strong>, where each record represents an individual user comment translated into English. Similar to Sample2, this dataset provides <strong>multiple independent sentiment annotations</strong> for every comment, making it valuable for evaluating the robustness and consistency of sentiment analysis models rather than simply training a classifier.</p>
+                    
+                    <p class="mt-2">The primary content of the dataset consists of natural language comments covering a wide range of real-world discussions. The opinions include conversations related to politics, society, online debates, personal experiences, current affairs, entertainment, and internet culture. Many comments are informal, conversational, and expressive, reflecting the style commonly found on social media platforms, discussion forums, and online communities. Some responses are very short and direct, while others are long, detailed, and contain multiple viewpoints within a single statement. This diversity provides an excellent environment for testing AI models on authentic human language rather than artificially generated text.</p>
+
+                    <p class="mt-2">Structurally, the dataset contains <strong>160 records and six columns</strong>. The first column serves as a unique numerical identifier for each response, while the second column contains the <strong>English Translation</strong>, which is the primary text used for analysis. The third column is currently empty and does not contain meaningful information, making it suitable for omission during processing or future metadata expansion. The remaining three columns contain <strong>independent sentiment annotations</strong> assigned to each comment.</p>
+
+                    <p class="mt-2">Unlike conventional sentiment datasets that provide a single ground truth label, Sample3 includes <strong>three separate sentiment judgments</strong> for every opinion. These multiple annotations allow developers to compare prediction consistency, measure annotator agreement, and identify ambiguous comments where different interpretations exist. Such datasets are particularly valuable when evaluating modern AI models because they acknowledge that sentiment can sometimes be subjective rather than absolute.</p>
+
+                    <p class="mt-2">The sentiment distribution in Sample3 is highly skewed toward <strong>positive</strong> labels. Across all three annotation columns, the overwhelming majority of comments are classified as positive, with only a small number labeled as negative or neutral. Specifically:</p>
+                    <ul class="styled-list">
+                        <li><strong>Annotation Column 1</strong> contains <strong>152 Positive</strong>, <strong>4 Neutral</strong>, and <strong>4 Negative</strong> labels.</li>
+                        <li><strong>Annotation Column 2</strong> contains <strong>143 Positive</strong>, <strong>13 Negative</strong>, and <strong>4 Neutral</strong> labels.</li>
+                        <li><strong>Annotation Column 3</strong> contains <strong>150 Positive</strong>, <strong>8 Negative</strong>, and <strong>2 Neutral</strong> labels.</li>
+                    </ul>
+
+                    <p class="mt-2">No missing sentiment labels are present in the dataset, meaning every record has been completely annotated. While this makes the dataset clean and easy to process, the heavy imbalance toward positive sentiment means it is more suitable for demonstrating sentiment classification workflows than for training a balanced classifier without additional data augmentation or class balancing techniques.</p>
+
+                    <p class="mt-2">From a Natural Language Processing perspective, Sample3 supports a wide variety of analytical tasks. It can be used to perform sentiment classification, opinion mining, text summarization, keyword extraction, semantic similarity analysis, topic discovery, clustering of similar comments, duplicate detection, confidence estimation, and explainable AI. The dataset is also suitable for benchmarking model performance because AI predictions can be compared against three independent human annotations rather than relying on a single reference label.</p>
+
+                    <p class="mt-2">When integrated into the <strong>OpinionGraph AI</strong> platform, Sample3 can populate several interactive dashboard components. The platform can generate sentiment distribution charts, confidence score visualizations, keyword frequency graphs, comment exploration tables, AI-generated summaries, semantic clusters, word clouds, and annotation agreement reports. Since multiple labels are available for each comment, the dashboard can also highlight disagreements between annotations, enabling users to identify comments with ambiguous or context-dependent sentiment.</p>
+                    
+                    <p class="mt-2">Despite its strengths, Sample3 has several limitations when viewed as a government consultation dataset. It does not contain stakeholder information, organization names, consultation titles, submission dates, geographic details, stakeholder categories, legislative references, or consultation metadata. As a result, advanced features such as stakeholder segmentation, organization-wise sentiment analysis, regional comparisons, consultation timelines, participation statistics, and policy-specific analytics cannot be demonstrated using this dataset alone. Its primary purpose is to validate and benchmark AI models rather than support comprehensive consultation intelligence.</p>
+
+                    <p class="mt-2">Overall, <strong>Sample3.xlsx</strong> is a high-quality benchmark dataset for evaluating sentiment analysis systems, particularly those designed to handle subjective language and multiple human annotations. Its realistic conversational content, complete annotations, and diverse textual opinions make it well suited for testing the core AI capabilities of OpinionGraph AI, including sentiment prediction, explainable AI, semantic understanding, and interactive visualization. However, for deployment as a full-scale eConsultation Intelligence Platform, it should be complemented with consultation-specific metadata and stakeholder information to enable richer policy analytics and decision-support functionality.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">OpinionGraph AI</div>
+            <p>&copy; 2026 E-Consultation Intelligence. Designed for the Public Sector.</p>
+        </div>
+    </footer>
+
+    <!-- Application Script -->
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
