@@ -6,3 +6,4 @@ wordcloud==1.9.6
 huggingface_hub==1.21.0
 pandas==3.0.2
 openpyxl==3.1.5
+gunicorn==21.2.0

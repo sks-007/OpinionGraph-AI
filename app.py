@@ -212,4 +212,5 @@ def analyze_batch():
         return jsonify({"error": "Batch processing failed"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # When running directly, bind to 0.0.0.0 and port 7860 for Hugging Face Spaces compatibility
+    app.run(host='0.0.0.0', port=7860)
