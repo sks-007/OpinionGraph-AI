@@ -1,3 +1,12 @@
+---
+title: OpinionGraph AI
+emoji: 👁
+colorFrom: pink
+colorTo: red
+sdk: docker
+pinned: false
+---
+
 # OpinionGraph AI - eConsultation Intelligence Platform
 
 <div align="center">
