@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
@@ -15,9 +16,14 @@ from wordcloud import WordCloud, STOPWORDS
 app = Flask(__name__)
 CORS(app)
 
-# --- Define Local Model Paths ---
+# --- Configuration ---
 SENTIMENT_MODEL_PATH = "models/distilbert-base-uncased-finetuned-sst-2-english"
+if not os.path.exists(SENTIMENT_MODEL_PATH):
+    SENTIMENT_MODEL_PATH = "distilbert-base-uncased-finetuned-sst-2-english"
+
 SUMMARIZER_MODEL_PATH = "models/facebook/bart-large-cnn"
+if not os.path.exists(SUMMARIZER_MODEL_PATH):
+    SUMMARIZER_MODEL_PATH = "facebook/bart-large-cnn"
 
 # --- AI Model Loading from Local Disk ---
 device = 0 if torch.cuda.is_available() else -1
