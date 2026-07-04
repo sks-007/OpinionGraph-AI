@@ -6,7 +6,6 @@
 ![Ministry of Corporate Affairs](https://img.shields.io/badge/MoCA-Problem_ID_25035-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.10+-green?style=for-the-badge&logo=python)
 ![Flask](https://img.shields.io/badge/Flask-3.1-black?style=for-the-badge&logo=flask)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
 **An AI-powered platform for analyzing stakeholder comments in government eConsultations using Sentiment Analysis, Intelligent Summarization, and Interactive Word Cloud visualization.**
 
@@ -16,7 +15,7 @@
 
 ---
 
-## 📋 Problem Context
+## Problem Context
 
 > **Organization:** Ministry of Corporate Affairs (MoCA), Government of India  
 > **Problem Statement ID:** 25035  
@@ -37,27 +36,27 @@ OpinionGraph AI was built to solve this. Rather than replacing human decision-ma
 
 ---
 
-## ✨ Features
+## Features
 
-### 🧠 AI Sentiment Analysis
+### AI Sentiment Analysis
 - Automatically classifies every stakeholder comment as **Positive**, **Negative**, or **Neutral**
 - Provides an individual **confidence score** for each classification
 - Generates **overall sentiment distribution** across the entire consultation
 - Built on `distilbert-base-uncased-finetuned-sst-2-english` for fast, accurate predictions
 
-### 📝 Intelligent Summary Generation
+### Intelligent Summary Generation
 - Generates concise summaries that preserve the stakeholder's original intent
 - Runs `facebook/bart-large-cnn` for deep, abstractive summarization
 - Automatically falls back to extractive summarization (first 2 sentences) for large datasets (≥100 comments) to ensure speed
 - Summaries are displayed alongside each comment in the Comment Explorer
 
-### ☁️ Interactive Keyword Heatmap (Word Cloud)
+### Interactive Keyword Heatmap (Word Cloud)
 - Extracts the most meaningful keywords from all comments using WordCloud frequency analysis
 - Renders a beautiful, interactive D3.js word cloud where word size = frequency
 - **Clicking any keyword** instantly navigates to the Comment Explorer, filtered to comments containing that keyword
 - Uses an expanded stopword list to filter noise and irrelevant words
 
-### 📊 Comprehensive Dashboard
+### Comprehensive Dashboard
 - **Summary Statistics**: Total comments, sentiment breakdown, average confidence score
 - **Sentiment Distribution Charts**: Pie charts and bar graphs
 - **Model Confidence Distribution**: Histogram of AI prediction confidence
@@ -65,21 +64,21 @@ OpinionGraph AI was built to solve this. Rather than replacing human decision-ma
 - **Comment Length Distribution**: Analytics on response detail level
 - **Top Keywords Bar Chart**: Visual frequency ranking of key terms
 
-### 🔍 Comment Explorer
+### Comment Explorer
 - Full filterable and searchable table of all analyzed comments
 - Filter by **Positive / Negative / Neutral** sentiment
 - Real-time search across all comment text
 - Displays original comment, AI-generated summary, detected sentiment, and confidence score
 - All comments shown at once — no pagination limits
 
-### ⚡ Performance Optimizations
+### Performance Optimizations
 - **True Batch Inference**: Feeds all comments to the sentiment model simultaneously (`batch_size=32`) instead of one-by-one, eliminating per-call overhead
 - **Auto-skip Summarizer**: For datasets ≥100 comments, uses fast sentence extraction instead of the heavy BART model
 - **Toast Notification**: Non-blocking UI notification explains when performance mode activates
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology | Purpose |
 |---|---|---|
@@ -96,7 +95,7 @@ OpinionGraph AI was built to solve this. Rather than replacing human decision-ma
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Opinion Graph/
@@ -125,7 +124,7 @@ Opinion Graph/
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 - Python 3.10 or higher
@@ -178,7 +177,7 @@ The server will start at **http://localhost:5000**
 
 ---
 
-## 📊 How It Works
+## How It Works
 
 ### Data Flow
 
@@ -228,7 +227,7 @@ All comment texts are sent to /analyze-batch API endpoint
 
 ---
 
-## 📂 Sample Datasets
+## Sample Datasets
 
 Three sample datasets are included and available for download directly from the app's **Demo** section.
 
@@ -263,7 +262,7 @@ Three sample datasets are included and available for download directly from the 
 
 ---
 
-## 🌐 Application Pages
+## Application Pages
 
 | Route | Page | Description |
 |---|---|---|
@@ -282,7 +281,7 @@ Three sample datasets are included and available for download directly from the 
 
 ---
 
-## 🔌 API Reference
+## API Reference
 
 ### `POST /analyze-batch`
 
@@ -323,7 +322,7 @@ Analyzes a batch of comments using the full AI pipeline.
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Key configuration values in `app.py`:
 
@@ -344,7 +343,7 @@ BATCH_SIZE = 32
 
 ---
 
-## 🐛 Known Limitations
+## Known Limitations
 
 - **Summarizer is CPU-bound**: The `bart-large-cnn` model is large and runs slowly on CPU. For datasets ≥100 comments, the platform automatically uses fast sentence extraction.
 - **No GPU auto-detection on Windows**: PyTorch CUDA support requires a compatible NVIDIA GPU and CUDA toolkit. The app auto-detects and uses a GPU if available.
@@ -353,7 +352,7 @@ BATCH_SIZE = 32
 
 ---
 
-## 🚧 Roadmap
+## Roadmap
 
 - [ ] GPU-accelerated inference for production deployments
 - [ ] Result caching for duplicate comment detection (instant re-analysis)
@@ -367,22 +366,8 @@ BATCH_SIZE = 32
 
 ---
 
-## 👥 Team
+## Team
 
 Built for **Smart India Hackathon 2026** under Problem Statement ID **25035** issued by the **Ministry of Corporate Affairs (MoCA)**.
 
 ---
-
-## 📄 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-<div align="center">
-
-**OpinionGraph AI** — Turning public opinion into actionable policy intelligence.
-
-Made with ❤️ for the Ministry of Corporate Affairs, Government of India.
-
-</div>
